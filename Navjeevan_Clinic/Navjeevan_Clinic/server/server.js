@@ -1,6 +1,11 @@
+import dns from "node:dns";
 import dotenv from "dotenv";
-dotenv.config();
+import express from "express";
+import mongoose from "mongoose";
 
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
+dotenv.config();
 if (!process.env.MONGODB_URI) { throw new Error("MONGODB_URI is required."); }
 if (!process.env.JWT_SECRET || (process.env.NODE_ENV === "production" && process.env.JWT_SECRET === "change-this-secret-in-production")) {
   throw new Error("Set a strong JWT_SECRET before running in production.");
