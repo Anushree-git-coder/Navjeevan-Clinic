@@ -208,12 +208,11 @@ export const loginUser = async (req, res) => {
 
     // Do not reveal whether an email/phone is registered.
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email/phone or password.",
-      });
-    }
-
+        return res.status(401).json({
+          success: false,
+          message: "DEBUG: USER NOT FOUND",
+  });
+}
     const now = new Date();
     if (user.loginLockedUntil && user.loginLockedUntil > now) {
       const remainingMinutes = Math.max(

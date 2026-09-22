@@ -10,41 +10,51 @@ const createAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
 
+    const adminEmail = "navjeevan.gynac.clinic@gmail.com";
+    const adminPhone = "9000000000";
+    const adminPassword = "Admin@123";
+
     const existingAdmin = await User.findOne({
-    $or: [
-        { role: "admin" },
-        { phone: "9000000000" },
-        { email: "admin5@gmail.com" },
-        ],
+      role: "admin",
     });
 
     if (existingAdmin) {
-      console.log("✅ Admin already exists.");
+      existingAdmin.email = adminEmail;
+      existingAdmin.phone = adminPhone;
+      existingAdmin.fullName = "System Administrator";
+      existingAdmin.isVerified = true;
+
+      // Update password
+      existingAdmin.password = await bcrypt.hash(adminPassword, 10);
+
+      await existingAdmin.save();
+
+      console.log("✅ Existing admin updated successfully.");
+      console.log("Email:", existingAdmin.email);
+      console.log("Phone:", existingAdmin.phone);
+
       process.exit();
     }
 
-    const hashedPassword = await bcrypt.hash(
-      "Admin@123",
-      10
-    );
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
     const admin = await User.create({
       fullName: "System Administrator",
-      email: "admin5@gmail.com",
-      phone: "9000000000",
+      email: adminEmail,
+      phone: adminPhone,
       password: hashedPassword,
       role: "admin",
       isVerified: true,
     });
 
     console.log("✅ Admin created successfully.");
-    console.log(admin);
+    console.log("Email:", admin.email);
+    console.log("Phone:", admin.phone);
 
     process.exit();
 
   } catch (error) {
-
-    console.error("❌ Error creating admin:");
+    console.error("❌ Error creating/updating admin:");
     console.error(error.message);
 
     process.exit(1);
