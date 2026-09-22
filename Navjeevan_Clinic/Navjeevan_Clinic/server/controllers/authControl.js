@@ -210,7 +210,7 @@ export const loginUser = async (req, res) => {
     if (!user) {
         return res.status(401).json({
           success: false,
-          message: "DEBUG: USER NOT FOUND",
+          message: "Invalid email/phone or password.",
   });
 }
     const now = new Date();
